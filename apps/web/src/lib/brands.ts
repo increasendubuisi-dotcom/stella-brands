@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { entitlementsFor, type Entitlements } from "@stela/entitlements";
+import { entitlementsFor, type Entitlements } from "@stella/entitlements";
 
 export type BrandListItem = {
   id: string;

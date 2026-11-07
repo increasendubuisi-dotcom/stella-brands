@@ -20,7 +20,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <header className="flex flex-wrap items-center gap-6 border-b border-line bg-surface px-6 py-3.5 md:px-8">
         <Link href="/dashboard" className="font-[family-name:var(--font-display)] text-[26px] leading-none text-ink no-underline">
-          Stela
+          Stella
         </Link>
         <nav aria-label="Main" className="flex gap-5 text-sm">
           <Link href="/dashboard" className="font-semibold text-ink no-underline">

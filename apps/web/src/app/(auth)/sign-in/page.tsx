@@ -12,7 +12,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       title="Welcome back"
       footer={
         <>
-          New to Stela? <Link href="/sign-up" className="text-accent">Create an account</Link>
+          New to Stella? <Link href="/sign-up" className="text-accent">Create an account</Link>
         </>
       }
     >

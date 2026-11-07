@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { DRAFT_TABLES, MAX_OPS_PER_SAVE, safeParseBlockProps, type DraftOp } from "@stela/brand-schema";
+import { DRAFT_TABLES, MAX_OPS_PER_SAVE, safeParseBlockProps, type DraftOp } from "@stella/brand-schema";
 import { supabaseServer } from "@/lib/supabase/server";
 
 export type SaveResult =

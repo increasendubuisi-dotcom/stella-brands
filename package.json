@@ -1,13 +1,13 @@
 {
-  "name": "stela-brands",
+  "name": "stella",
   "private": true,
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --filter @stela/web dev",
-    "build": "pnpm --filter @stela/web build",
+    "dev": "pnpm --filter @stella/web dev",
+    "build": "pnpm --filter @stella/web build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:db": "bash scripts/test-db.sh",

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { BlockType, StrategyFieldKey } from "@stela/brand-schema";
+import type { BlockType, StrategyFieldKey } from "@stella/brand-schema";
 import { BrandPanel, type BrandActions } from "./brand-panel";
 import {
   addColor,
@@ -30,7 +30,7 @@ import { AssetUrls } from "./canvas";
 import { PublishPanel, type PublishedInfo } from "./publish-panel";
 import { AssistantPanel, ImproveTool } from "./assistant-panel";
 import { uploadAsset } from "./upload";
-import { contrastRatio } from "@stela/brand-schema";
+import { contrastRatio } from "@stella/brand-schema";
 import {
   addBlock,
   addSection,

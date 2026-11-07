@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-6 px-6 py-24">
-      <h1 className="font-[family-name:var(--font-display)] text-7xl leading-none">Stela</h1>
+      <h1 className="font-[family-name:var(--font-display)] text-7xl leading-none">Stella</h1>
       <p className="text-xl leading-relaxed text-muted">
         Brand guidelines for designers: build the guide, publish it as a live site, and hand it to your client.
       </p>
@@ -26,7 +26,7 @@ export default async function Home() {
           Sign in
         </Link>
       </div>
-      <p className="text-sm text-subtle">Early access: Stela is being built in the open. Expect changes.</p>
+      <p className="text-sm text-subtle">Early access: Stella is being built in the open. Expect changes.</p>
     </main>
   );
 }

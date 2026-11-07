@@ -4,7 +4,7 @@
  * of the image they cover, and near-duplicates are merged, so a logo's few flat
  * colours come out cleanly and photos give their dominant tones.
  */
-import { rgbToHex } from "@stela/brand-schema";
+import { rgbToHex } from "@stella/brand-schema";
 
 export type ExtractedColor = { hex: string; share: number };
 

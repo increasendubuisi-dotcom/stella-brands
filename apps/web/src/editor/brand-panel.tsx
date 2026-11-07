@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import { colorValues, isValidHex, normalizeHex } from "@stela/brand-schema";
+import { colorValues, isValidHex, normalizeHex } from "@stella/brand-schema";
 import { COLOR_GROUPS, colorsInGroup, familyCss, orderedStyles } from "./brand-system";
 import { familyFontFiles } from "./assets";
 import { extractFromFile, type ExtractedColor } from "./extract-colors";

@@ -1,13 +1,13 @@
 import "server-only";
 import { cookies } from "next/headers";
-import type { GuideSnapshot } from "@stela/brand-schema";
+import type { GuideSnapshot } from "@stella/brand-schema";
 import { supabaseAdmin, supabaseServer } from "@/lib/supabase/server";
 import { signPaths } from "@/lib/draft";
 
 export const SLUG_RE = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
 
 export function guideCookie(slug: string) {
-  return `stela_guide_${slug}`;
+  return `stella_guide_${slug}`;
 }
 
 export type LoadedGuide =

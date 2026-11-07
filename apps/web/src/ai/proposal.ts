@@ -5,8 +5,8 @@
  * Safe for the browser (no server imports).
  */
 import { z } from "zod";
-import { STRATEGY_FIELD_KEYS, type StrategyFieldKey } from "@stela/brand-schema";
-import type { DraftOp } from "@stela/brand-schema";
+import { STRATEGY_FIELD_KEYS, type StrategyFieldKey } from "@stella/brand-schema";
+import type { DraftOp } from "@stella/brand-schema";
 import { addBlock, sectionBlocks, setStrategy, strategyText, textToDoc, type Draft } from "../editor/model";
 
 export type DraftOpsResult = { draft: Draft; ops: DraftOp[]; applied: number };

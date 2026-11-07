@@ -16,7 +16,7 @@ import {
   type DraftOp,
   type DraftTable,
   type StrategyFieldKey,
-} from "@stela/brand-schema";
+} from "@stella/brand-schema";
 
 export type SectionRow = {
   id: string;

@@ -1,4 +1,4 @@
-import type { DraftOp } from "@stela/brand-schema";
+import type { DraftOp } from "@stella/brand-schema";
 import { queueKey } from "./model";
 
 /**

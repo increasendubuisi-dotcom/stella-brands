@@ -5,7 +5,7 @@
  * so editing a colour or style changes it everywhere at once. Deleting one also
  * removes its references from blocks in the same save, so nothing dangles.
  */
-import { byPosition, isValidHex, normalizeHex, positionBetween, type DraftOp } from "@stela/brand-schema";
+import { byPosition, isValidHex, normalizeHex, positionBetween, type DraftOp } from "@stella/brand-schema";
 import type { BlockRow, ColorRow, Draft, FamilyRow, NewId, Result, StyleRow } from "./model";
 
 const defaultNewId: NewId = () => crypto.randomUUID();

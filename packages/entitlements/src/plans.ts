@@ -56,7 +56,7 @@ export const PLANS: Record<PlanKey, PlanConfig> = {
   starter: {
     key: "starter",
     name: "Starter",
-    description: "Try Stela with one live guide.",
+    description: "Try Stella with one live guide.",
     prices: { NGN: { monthly: 0, annual: 0 } },
     features: new Set<Feature>(["version_history"]),
     limits: {

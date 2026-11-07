@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PG_BIN="${PG_BIN:-$(dirname "$(command -v initdb 2>/dev/null || ls -d /usr/lib/postgresql/*/bin/initdb | sort -V | tail -1)")}"
 PORT="${PG_TEST_PORT:-54329}"
-DATA="$(mktemp -d /tmp/stela-pg.XXXXXX)"
+DATA="$(mktemp -d /tmp/stella-pg.XXXXXX)"
 
 # Postgres refuses to run as root; use the postgres user when we are root.
 run() {

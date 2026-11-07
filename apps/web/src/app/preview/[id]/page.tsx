@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { buildSnapshot } from "@stela/brand-schema";
+import { buildSnapshot } from "@stella/brand-schema";
 import { GuideView } from "@/guide/guide-view";
 import { requireUser } from "@/lib/auth";
 import { loadDraft, signPaths, snapshotInput } from "@/lib/draft";

@@ -1,10 +1,10 @@
-# Stela Brands
+# Stella
 
 Build, present and publish brand guidelines: a block-based editor, a brand
 system of colour and type tokens, an AI strategy assistant (Phase 2), and
 published guides clients can browse, comment on and download from.
 
-Product and technical plan: see the "Stela Brands — Product & Technical Plan" doc.
+Product and technical plan: [docs/plan](docs/plan) (research, plan, original data-model proposal).
 Progress: [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ## How it fits together
@@ -28,7 +28,7 @@ Key rules:
   them atomically and refuses a save made from an out-of-date revision (another tab
   or teammate), instead of silently overwriting.
 - **Plans are config.** No component checks a plan name or price; ask `can()` /
-  `checkLimit()` from `@stela/entitlements`.
+  `checkLimit()` from `@stella/entitlements`.
 
 ## Develop
 

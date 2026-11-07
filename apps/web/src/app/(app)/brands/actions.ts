@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { slugify, templateToOps, TEMPLATES } from "@stela/brand-schema";
-import { checkLimit } from "@stela/entitlements";
+import { slugify, templateToOps, TEMPLATES } from "@stella/brand-schema";
+import { checkLimit } from "@stella/entitlements";
 import { requireUser } from "@/lib/auth";
 import { primaryWorkspace, workspaceEntitlements } from "@/lib/brands";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MAX_OPS_PER_SAVE } from "@stela/brand-schema";
+import { MAX_OPS_PER_SAVE } from "@stella/brand-schema";
 import { saveDraft } from "@/app/(app)/brands/[id]/actions";
 import type { Draft, Result } from "./model";
 import { SaveQueue } from "./save-queue";

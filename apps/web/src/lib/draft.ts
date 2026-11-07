@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { SnapshotInput } from "@stela/brand-schema";
+import type { SnapshotInput } from "@stella/brand-schema";
 import type { AssetRow, BlockRow, ColorRow, Draft, FamilyRow, FontFileRow, SectionRow, StrategyRow, StyleRow } from "@/editor/model";
 
 export const ASSET_BUCKET = "brand-assets";

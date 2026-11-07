@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { primaryWorkspace, workspaceEntitlements } from "@/lib/brands";
 import { loadDraft, signPaths } from "@/lib/draft";
 import { Editor } from "@/editor/editor";
-import { limitOf } from "@stela/entitlements";
+import { limitOf } from "@stella/entitlements";
 
 export const metadata: Metadata = { title: "Editor" };
 

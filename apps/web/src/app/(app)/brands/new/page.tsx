@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { TEMPLATES } from "@stela/brand-schema";
+import { TEMPLATES } from "@stella/brand-schema";
 import { FormError } from "@/components/auth-shell";
 import { createBrand } from "../actions";
 

@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Workspace packages ship TypeScript source.
-  transpilePackages: ["@stela/brand-schema", "@stela/entitlements"],
+  transpilePackages: ["@stella/brand-schema", "@stella/entitlements"],
   poweredByHeader: false,
 };
 

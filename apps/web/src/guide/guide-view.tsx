@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { contrastRatio, type GuideSnapshot, type SnapshotBlock, type SnapshotSection } from "@stela/brand-schema";
+import { contrastRatio, type GuideSnapshot, type SnapshotBlock, type SnapshotSection } from "@stella/brand-schema";
 import { cssFamilyName } from "@/editor/brand-system";
 import { docToText } from "@/editor/model";
 import { CopyChip, DownloadAll } from "./guide-client";
@@ -143,7 +143,7 @@ export function GuideView({ snapshot, urls, downloadHref, downloadAllEndpoint, b
                 ) : null}
               </section>
             ) : null}
-            <footer className="border-t border-black/10 pt-6 text-xs text-black/40">Made with Stela</footer>
+            <footer className="border-t border-black/10 pt-6 text-xs text-black/40">Made with Stella</footer>
           </div>
         </main>
       </div>

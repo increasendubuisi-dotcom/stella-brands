@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { buildSnapshot } from "@stela/brand-schema";
-import { checkLimit } from "@stela/entitlements";
+import { buildSnapshot } from "@stella/brand-schema";
+import { checkLimit } from "@stella/entitlements";
 import { workspaceEntitlements } from "@/lib/brands";
 import { loadDraft, snapshotInput } from "@/lib/draft";
 import { supabaseServer } from "@/lib/supabase/server";

@@ -1,4 +1,4 @@
--- Stela Brands — core schema (Phase 1)
+-- Stella — core schema (Phase 1)
 --
 -- Every brand-scoped row carries brand_id, and child rows use composite
 -- foreign keys (child_id, brand_id) so a block can never point at another

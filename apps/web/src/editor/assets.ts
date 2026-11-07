@@ -6,7 +6,7 @@
  * it. The stored file is kept: a published version may still show it, and
  * removing it would break a live guide.
  */
-import { byPosition, type DraftOp } from "@stela/brand-schema";
+import { byPosition, type DraftOp } from "@stella/brand-schema";
 import type { AssetCategory, AssetRow, Draft, FontFileRow, NewId, Result } from "./model";
 
 const defaultNewId: NewId = () => crypto.randomUUID();

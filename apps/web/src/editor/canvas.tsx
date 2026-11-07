@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { formatBytes } from "./assets-panel";
-import { colorValues, contrastRatio, STRATEGY_FIELD_KEYS, type BlockType, type StrategyFieldKey } from "@stela/brand-schema";
+import { colorValues, contrastRatio, STRATEGY_FIELD_KEYS, type BlockType, type StrategyFieldKey } from "@stella/brand-schema";
 import { familyCss, weightsByFamily } from "./brand-system";
 import { childSections, docToText, sectionBlocks, strategyText, textToDoc, type BlockRow, type Draft, type SectionRow } from "./model";
 import { PlusIcon } from "./section-tree";

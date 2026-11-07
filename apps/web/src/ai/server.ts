@@ -4,7 +4,7 @@
  */
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { limitOf } from "@stela/entitlements";
+import { limitOf } from "@stella/entitlements";
 import { workspaceEntitlements } from "@/lib/brands";
 import { loadDraft } from "@/lib/draft";
 import { supabaseServer } from "@/lib/supabase/server";

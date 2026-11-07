@@ -1,5 +1,9 @@
 # Progress
 
+
+> Stella continues the Stela Brands codebase (10 commits, built 7 Nov 2026). Rows 1–24 below describe what that code does. Deployment and Supabase notes refer to the old stela-brands project until Stella has its own.
+
+
 Status key: Not started · In progress · Completed · Tested · Blocked
 
 ## Phase 1 — Functional MVP

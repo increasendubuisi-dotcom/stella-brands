@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Stela app chrome. Brand guides use their own theme tokens, never these. */
+/* Stella app chrome. Brand guides use their own theme tokens, never these. */
 @theme {
   --color-paper: #f6f4ef;
   --color-surface: #ffffff;

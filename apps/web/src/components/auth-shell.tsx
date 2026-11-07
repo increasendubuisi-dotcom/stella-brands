@@ -5,7 +5,7 @@ export function AuthShell({ title, subtitle, children, footer }: { title: string
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
       <Link href="/" className="mb-10 font-[family-name:var(--font-display)] text-4xl leading-none text-ink no-underline">
-        Stela
+        Stella
       </Link>
       <div className="w-full max-w-sm rounded-[var(--radius-card)] border border-line bg-surface p-8">
         <h1 className="font-[family-name:var(--font-display)] text-3xl leading-tight">{title}</h1>

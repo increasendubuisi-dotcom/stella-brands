@@ -3,7 +3,7 @@
  * the guide's structure (with section ids it may target), the colour and type
  * system, and the project memory. Pure and length-capped.
  */
-import { STRATEGY_FIELD_KEYS } from "@stela/brand-schema";
+import { STRATEGY_FIELD_KEYS } from "@stella/brand-schema";
 import { childSections, docToText, sectionBlocks, strategyText, type Draft, type SectionRow } from "../editor/model";
 
 export type BrandBrief = { name: string; description: string | null; website: string | null };
