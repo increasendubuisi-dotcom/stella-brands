@@ -1,6 +1,22 @@
 # Progress
 
-> Stella continues the Stela Brands codebase (10 commits, built 7 Nov 2026). Rows 1–24 below describe what that code does. Deployment and Supabase notes refer to the old stela-brands project until Stella has its own.
+> Stella continues the Stela Brands codebase (10 commits, built 7 Nov 2026). Stella's Supabase project is **Stella-brands** (`sxaebtlbjdqidxcgtxoc`, eu-central-1), with all five migrations applied on 7 Nov 2026. Older notes below that mention the stela-brands project or stela-brands.vercel.app refer to the previous deployment.
+
+## Live check against Stella-brands (7 Nov 2026)
+
+A local app pointed at the live project was driven in a real browser. Everything below **passed**:
+
+- Sign-in. New-brand provisioning (profile, studio and Starter plan) was checked in SQL.
+- Creating a brand from a template. Typing persists after reload, and dragging a block persists (order confirmed in the database).
+- Publishing (version 1), then opening the public link signed out.
+- A draft edit does not change the live guide until republished. Republishing (version 2) updates the live guide.
+- brand.md and brand.json serve the published version, with no storage paths.
+- Uploading a logo. Duplicating a brand copies its content and files into the copy's own storage folder, and edits to the copy leave the original untouched.
+- The Starter plan's 2-brand limit blocks a third brand with a clear message. Archive followed by delete permanently works.
+
+**Not yet checked live:** client file downloads. These need `SUPABASE_SERVICE_ROLE_KEY`, which only the project owner can provide.
+
+**Local development behind a proxy:** run `NODE_USE_ENV_PROXY=1 pnpm dev`. Otherwise Node's fetch ignores `HTTPS_PROXY` and sign-in fails with a misleading "email and password don't match" message.
 
 
 Status key: Not started · In progress · Completed · Tested · Blocked
@@ -11,7 +27,7 @@ Status key: Not started · In progress · Completed · Tested · Blocked
 | --- | --- | --- | --- |
 | 1 | Repo, CI, schema + RLS | Tested | 60 database tests, 37 unit tests. Applied to Supabase project stela-brands (London); live smoke test passed. |
 | 2 | Authentication and profiles | Completed | Sign-up with email confirmation, sign-in, sign-out, protected routes; signup creates profile, studio and Starter plan. Live at stela-brands.vercel.app. |
-| 3 | Dashboard | Tested | Brands by status (all, drafts, published, archived); archive, restore, delete with confirmation; duplicate copies structure, blocks, colours, type, strategy and files with every reference remapped (7 unit + 10 database tests). Duplicate's file copy is untested against real Supabase Storage until Stella's project exists. |
+| 3 | Dashboard | Tested | Brands by status (all, drafts, published, archived); archive, restore, delete with confirmation; duplicate copies structure, blocks, colours, type, strategy and files with every reference remapped (7 unit + 10 database tests). File copy verified against live Supabase Storage. |
 | 4 | New brand flow | In progress | Name, description, website, template; plan limit enforced. Logo/asset upload and colour extraction not built yet. |
 | 5 | Templates as data | Tested | Complete, Essentials, Blank applied through apply_draft_ops in database tests and from the app. |
 | 6 | Block registry | Completed | Editing built for all block types except Grid (container layouts come later). |
