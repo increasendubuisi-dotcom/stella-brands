@@ -9,6 +9,7 @@ import {
   duplicateBlock,
   duplicateSection,
   moveBlock,
+  moveBlockTo,
   moveSection,
   sectionBlocks,
   setStrategy,
@@ -129,6 +130,46 @@ describe("blocks", () => {
     const up = moveBlock(added.draft, added.created!, -1);
     expect(sectionBlocks(up.draft, logo)[0]!.id).toBe(added.created);
     expect(moveBlock(up.draft, added.created!, -1).ops).toEqual([]);
+  });
+
+  it("drags a block to any index within its section", () => {
+    const { d, newId, logo } = build();
+    let draft = d;
+    for (const t of ["heading", "divider", "image"] as const) {
+      const last = sectionBlocks(draft, logo).at(-1)!.id;
+      draft = addBlock(draft, logo, t, last, {}, newId).draft;
+    }
+    const order = () => sectionBlocks(draft, logo).map((b) => b.type);
+    expect(order()).toEqual(["text", "heading", "divider", "image"]);
+    const text = sectionBlocks(draft, logo)[0]!.id;
+    let r = moveBlockTo(draft, text, logo, 3);
+    draft = r.draft;
+    expect(order()).toEqual(["heading", "divider", "image", "text"]);
+    expect(r.ops).toEqual([{ op: "upsert", table: "blocks", row: { id: text, position: expect.any(Number) } }]);
+    r = moveBlockTo(draft, text, logo, 1);
+    draft = r.draft;
+    expect(order()).toEqual(["heading", "text", "divider", "image"]);
+    expect(moveBlockTo(draft, text, logo, 1).ops).toEqual([]);
+  });
+
+  it("drags a block into another section and saves its new section", () => {
+    const { d, logo, colour } = build();
+    const block = sectionBlocks(d, logo)[0]!.id;
+    const r = moveBlockTo(d, block, colour, 0);
+    expect(sectionBlocks(r.draft, logo)).toEqual([]);
+    expect(sectionBlocks(r.draft, colour).map((b) => b.id)[0]).toBe(block);
+    expect(r.ops).toEqual([{ op: "upsert", table: "blocks", row: { id: block, section_id: colour, position: expect.any(Number) } }]);
+  });
+
+  it("keeps a filled grid in its own section", () => {
+    const { d, newId, logo, colour } = build();
+    const grid = addBlock(d, logo, "grid", null, {}, newId);
+    const gid = grid.created!;
+    const child = { ...sectionBlocks(grid.draft, logo).find((b) => b.type === "text")!, parent_block_id: gid };
+    const withChild = { ...grid.draft, blocks: { ...grid.draft.blocks, [child.id]: child } };
+    expect(moveBlockTo(withChild, gid, colour, 0).ops).toEqual([]);
+    expect(moveBlockTo(withChild, gid, logo, 0).ops).toEqual([]); // already first
+    expect(moveBlockTo(grid.draft, gid, colour, 0).ops).toHaveLength(1); // an empty grid can move
   });
 
   it("sends type with props so the server can validate them", () => {

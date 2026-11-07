@@ -1,10 +1,24 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DraggableAttributes,
+  type DraggableSyntheticListeners,
+} from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { formatBytes } from "./assets-panel";
 import { colorValues, contrastRatio, STRATEGY_FIELD_KEYS, type BlockType, type StrategyFieldKey } from "@stella/brand-schema";
 import { familyCss, weightsByFamily } from "./brand-system";
-import { childSections, docToText, sectionBlocks, strategyText, textToDoc, type BlockRow, type Draft, type SectionRow } from "./model";
+import { blockHasChildren, childSections, docToText, sectionBlocks, strategyText, textToDoc, type BlockRow, type Draft, type SectionRow } from "./model";
 import { PlusIcon } from "./section-tree";
 
 export const STRATEGY_LABELS: Record<StrategyFieldKey, string> = {
@@ -37,6 +51,8 @@ export type CanvasActions = {
   setStrategy: (key: StrategyFieldKey, value: string) => void;
   addBlock: (sectionId: string, type: BlockType, afterId: string | null, props?: Record<string, unknown>) => void;
   moveBlock: (id: string, dir: -1 | 1) => void;
+  /** Drag and drop: move a top-level block to `index` among the blocks of `sectionId`. */
+  moveBlockTo: (id: string, sectionId: string, index: number) => void;
   duplicateBlock: (id: string) => void;
   removeBlock: (id: string) => void;
 };
@@ -51,6 +67,27 @@ export function Canvas({ draft, rootId, selectedBlockId, focusSectionId, actions
 }) {
   const root = draft.sections[rootId];
   const index = childSections(draft, null).findIndex((s) => s.id === rootId);
+
+  // A stable id keeps dnd-kit's accessibility ids the same on server and client (no hydration mismatch).
+  const dndId = useId();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+    const moving = draft.blocks[String(active.id)];
+    const target = over.data.current as DropData | undefined;
+    if (!moving || !target) return;
+    if (target.kind === "section") {
+      // Dropped on a section's empty area: put it at the end.
+      actions.moveBlockTo(moving.id, target.sectionId, sectionBlocks(draft, target.sectionId).length);
+      return;
+    }
+    const overIndex = sectionBlocks(draft, target.sectionId).findIndex((b) => b.id === String(over.id));
+    if (overIndex >= 0) actions.moveBlockTo(moving.id, target.sectionId, overIndex);
+  };
 
   useEffect(() => {
     if (!focusSectionId) return;
@@ -67,7 +104,9 @@ export function Canvas({ draft, rootId, selectedBlockId, focusSectionId, actions
     >
       {root.hidden ? <HiddenNote /> : null}
       <span className="text-xs uppercase tracking-[0.14em] text-subtle">{String(index + 1).padStart(2, "0")}</span>
-      <SectionBody draft={draft} section={root} depth={0} selectedBlockId={selectedBlockId} actions={actions} />
+      <DndContext id={dndId} sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <SectionBody draft={draft} section={root} depth={0} selectedBlockId={selectedBlockId} actions={actions} />
+      </DndContext>
     </article>
   );
 }
@@ -92,20 +131,29 @@ function SectionBody({ draft, section, depth, selectedBlockId, actions }: {
         {depth > 0 && section.hidden ? <span className="ml-2 align-middle font-sans text-xs text-subtle">Hidden</span> : null}
       </HeadingTag>
       <AddBlockMenu sectionId={section.id} afterId={null} actions={actions} compact={blocks.length > 0} />
-      {blocks.map((b, i) => (
-        <div key={b.id}>
-          <BlockFrame
-            block={b}
-            selected={b.id === selectedBlockId}
-            isFirst={i === 0}
-            isLast={i === blocks.length - 1}
-            actions={actions}
-          >
-            <BlockView draft={draft} block={b} actions={actions} />
-          </BlockFrame>
-          <AddBlockMenu sectionId={section.id} afterId={b.id} actions={actions} compact />
-        </div>
-      ))}
+      <SectionDropZone sectionId={section.id} empty={blocks.length === 0}>
+        <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
+          {blocks.map((b, i) => (
+            <SortableBlock key={b.id} block={b} sectionId={section.id} lockedToSection={blockHasChildren(draft, b.id)}>
+              {(drag) => (
+                <>
+                  <BlockFrame
+                    block={b}
+                    selected={b.id === selectedBlockId}
+                    isFirst={i === 0}
+                    isLast={i === blocks.length - 1}
+                    actions={actions}
+                    drag={drag}
+                  >
+                    <BlockView draft={draft} block={b} actions={actions} />
+                  </BlockFrame>
+                  <AddBlockMenu sectionId={section.id} afterId={b.id} actions={actions} compact />
+                </>
+              )}
+            </SortableBlock>
+          ))}
+        </SortableContext>
+      </SectionDropZone>
       {childSections(draft, section.id).map((child) => (
         <SectionBody key={child.id} draft={draft} section={child} depth={depth + 1} selectedBlockId={selectedBlockId} actions={actions} />
       ))}
@@ -113,12 +161,52 @@ function SectionBody({ draft, section, depth, selectedBlockId, actions }: {
   );
 }
 
-function BlockFrame({ block, selected, isFirst, isLast, actions, children }: {
+type DropData = { kind: "block" | "section"; sectionId: string };
+
+type DragHandle = {
+  setActivatorNodeRef: (el: HTMLElement | null) => void;
+  attributes: DraggableAttributes;
+  listeners: DraggableSyntheticListeners;
+};
+
+/** Drop target for a section, so blocks can be dragged into a section that has none yet. */
+function SectionDropZone({ sectionId, empty, children }: { sectionId: string; empty: boolean; children: ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id: `drop-${sectionId}`, data: { kind: "section", sectionId } satisfies DropData });
+  return (
+    <div ref={setNodeRef} className={`${empty ? "min-h-6" : ""} rounded-md ${isOver ? "bg-accent/5 outline outline-1 outline-dashed outline-accent" : ""}`}>
+      {children}
+    </div>
+  );
+}
+
+function SortableBlock({ block, sectionId, lockedToSection, children }: {
+  block: BlockRow;
+  sectionId: string;
+  lockedToSection: boolean;
+  children: (drag: DragHandle) => ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+    id: block.id,
+    data: { kind: "block", sectionId, lockedToSection } as DropData & { lockedToSection: boolean },
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      className={isDragging ? "relative z-20 opacity-70" : undefined}
+    >
+      {children({ setActivatorNodeRef, attributes, listeners })}
+    </div>
+  );
+}
+
+function BlockFrame({ block, selected, isFirst, isLast, actions, drag, children }: {
   block: BlockRow;
   selected: boolean;
   isFirst: boolean;
   isLast: boolean;
   actions: CanvasActions;
+  drag: DragHandle;
   children: ReactNode;
 }) {
   const width = block.layout.width === "narrow" ? "max-w-[520px]" : "";
@@ -133,6 +221,21 @@ function BlockFrame({ block, selected, isFirst, isLast, actions, children }: {
         aria-label="Block actions"
         className={`absolute -top-4 right-2 z-10 flex items-center gap-0.5 rounded-md border border-line bg-surface p-0.5 text-xs shadow-sm ${selected ? "flex" : "hidden group-hover:flex"}`}
       >
+        <button
+          type="button"
+          ref={drag.setActivatorNodeRef}
+          {...drag.attributes}
+          {...drag.listeners}
+          aria-label="Drag to move block"
+          title="Drag to move block (or press Space, then arrow keys)"
+          onMouseDown={(e) => e.stopPropagation()}
+          className="cursor-grab touch-none rounded px-1.5 py-1 hover:bg-paper active:cursor-grabbing"
+        >
+          <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+            <circle cx="3" cy="3" r="1.2" /><circle cx="7" cy="3" r="1.2" /><circle cx="3" cy="7" r="1.2" />
+            <circle cx="7" cy="7" r="1.2" /><circle cx="3" cy="11" r="1.2" /><circle cx="7" cy="11" r="1.2" />
+          </svg>
+        </button>
         <ToolButton label="Move block up" disabled={isFirst} onClick={() => actions.moveBlock(block.id, -1)}>↑</ToolButton>
         <ToolButton label="Move block down" disabled={isLast} onClick={() => actions.moveBlock(block.id, 1)}>↓</ToolButton>
         <ToolButton label="Duplicate block" onClick={() => actions.duplicateBlock(block.id)}>Duplicate</ToolButton>

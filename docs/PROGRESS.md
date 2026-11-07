@@ -16,7 +16,7 @@ Status key: Not started · In progress · Completed · Tested · Blocked
 | 5 | Templates as data | Tested | Complete, Essentials, Blank applied through apply_draft_ops in database tests and from the app. |
 | 6 | Block registry | Completed | Editing built for all block types except Grid (container layouts come later). |
 | 7 | Section editor | Completed | Add, nest (4 levels), rename, hide, duplicate (with blocks and subsections), delete. |
-| 8 | Drag and drop | In progress | Sections reorder by drag within their level (with renumbering). Blocks move up/down; block drag not built. |
+| 8 | Drag and drop | Tested | Sections reorder by drag within their level. Blocks drag within a section and into other sections on the page, by mouse or keyboard (Space, arrows, Space; Esc cancels); up/down buttons kept. A grid holding blocks stays in its section. 3 model tests; mouse, keyboard and cancel checked in a real browser against the real canvas. Fixed a hydration mismatch in both drag areas. |
 | 9 | Asset uploads | Completed | Browser uploads to private storage, library with categories, client-download flag. Deleting keeps the stored file (live versions may use it); orphan cleanup later. |
 | 10 | Colour tokens | Completed | Add, edit, group, reorder, delete (cleans blocks), HEX/RGB/CMYK with overrides, Pantone, copy values, extraction from an image in the browser, WCAG contrast on combinations. |
 | 11 | Typography | Completed | Google, system and uploaded font files (weight/style read from file names, licence flag gates downloads). |

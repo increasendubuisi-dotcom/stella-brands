@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -28,6 +28,8 @@ export type TreeActions = {
 const MAX_DEPTH = 4;
 
 export function SectionTree({ draft, selectedId, actions }: { draft: Draft; selectedId: string | null; actions: TreeActions }) {
+  // A stable id keeps dnd-kit's accessibility ids the same on server and client (no hydration mismatch).
+  const dndId = useId();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -46,7 +48,7 @@ export function SectionTree({ draft, selectedId, actions }: { draft: Draft; sele
 
   return (
     <nav aria-label="Guide sections" className="flex flex-col gap-1">
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+      <DndContext id={dndId} sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <Level draft={draft} parentId={null} depth={0} selectedId={selectedId} actions={actions} />
       </DndContext>
       <button

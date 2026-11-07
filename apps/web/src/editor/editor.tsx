@@ -40,6 +40,7 @@ import {
   duplicateBlock,
   duplicateSection,
   moveBlock,
+  moveBlockTo,
   moveSection,
   setStrategy,
   strategyText,
@@ -130,6 +131,7 @@ export function Editor({ brand, initial, rev, assetUrls, uploadLimitMb, publishe
       if (r.created) setBlockId(r.created);
     },
     moveBlock: (id, dir) => run((d) => moveBlock(d, id, dir)),
+    moveBlockTo: (id, sectionId, index) => run((d) => moveBlockTo(d, id, sectionId, index)),
     duplicateBlock: (id) => {
       const r = run((d) => duplicateBlock(d, id));
       if (r.created) setBlockId(r.created);

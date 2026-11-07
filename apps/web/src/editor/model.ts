@@ -397,6 +397,42 @@ export function moveBlock(draft: Draft, id: string, direction: -1 | 1): Result {
   return { draft: { ...draft, blocks }, ops };
 }
 
+/**
+ * Moves a top-level block to `index` among the top-level blocks of `sectionId`
+ * (its own section or another). Used by drag and drop; `index` counts the
+ * target list without the moving block. A block that holds child blocks (a
+ * filled grid) can only move within its own section: the database ties
+ * children to their parent's section, so they cannot change section in one save.
+ */
+export function moveBlockTo(draft: Draft, id: string, sectionId: string, index: number): Result {
+  const current = draft.blocks[id];
+  if (!current || current.parent_block_id !== null || !draft.sections[sectionId]) return { draft, ops: [] };
+  const changingSection = current.section_id !== sectionId;
+  if (changingSection && blockHasChildren(draft, id)) return { draft, ops: [] };
+
+  const others = sectionBlocks(draft, sectionId).filter((b) => b.id !== id);
+  const clamped = Math.max(0, Math.min(index, others.length));
+  if (!changingSection) {
+    const from = sectionBlocks(draft, sectionId).findIndex((b) => b.id === id);
+    if (from === clamped) return { draft, ops: [] };
+  }
+  const { position, renumber } = placeAt(others, clamped);
+  const blocks = { ...draft.blocks, [id]: { ...current, section_id: sectionId, position } };
+  const ops: DraftOp[] = [];
+  if (renumber) {
+    for (const [bid, pos] of renumber) {
+      blocks[bid] = { ...blocks[bid]!, position: pos };
+      ops.push({ op: "upsert", table: "blocks", row: { id: bid, position: pos } });
+    }
+  }
+  ops.push({ op: "upsert", table: "blocks", row: changingSection ? { id, section_id: sectionId, position } : { id, position } });
+  return { draft: { ...draft, blocks }, ops };
+}
+
+export function blockHasChildren(draft: Draft, id: string): boolean {
+  return Object.values(draft.blocks).some((b) => b.parent_block_id === id);
+}
+
 export function duplicateBlock(draft: Draft, id: string, newId: NewId = defaultNewId): Result {
   const current = draft.blocks[id];
   if (!current) return { draft, ops: [] };
