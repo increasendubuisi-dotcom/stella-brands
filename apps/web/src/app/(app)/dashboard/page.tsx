@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ConfirmButton } from "@/components/confirm-button";
+import { PendingButton } from "@/components/pending-button";
 import { requireUser } from "@/lib/auth";
 import { countByStatus, listBrands, relativeTime, type BrandListItem, type StatusFilter } from "@/lib/brands";
-import { archiveBrand, deleteBrand, restoreBrand } from "../brands/actions";
+import { archiveBrand, deleteBrand, duplicateBrand, restoreBrand } from "../brands/actions";
 
 export const metadata: Metadata = { title: "Your brands" };
 
@@ -14,7 +15,7 @@ const TABS: { key: StatusFilter; label: string }[] = [
   { key: "archived", label: "Archived" },
 ];
 
-export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ status?: string; deleted?: string }> }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ status?: string; deleted?: string; error?: string }> }) {
   const params = await searchParams;
   const filter = (TABS.find((t) => t.key === params.status)?.key ?? "all") as StatusFilter;
   const { supabase } = await requireUser();
@@ -37,6 +38,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           New brand
         </Link>
       </div>
+
+      {params.error ? (
+        <p role="alert" className="rounded-[var(--radius-control)] bg-[#fbe9e5] px-3 py-2 text-sm text-danger">
+          {params.error}
+        </p>
+      ) : null}
 
       {params.deleted ? (
         <p role="status" className="rounded-[var(--radius-control)] bg-[#e6f2ea] px-3 py-2 text-sm text-success">
@@ -119,12 +126,20 @@ function BrandCard({ brand }: { brand: BrandListItem }) {
               </form>
             </>
           ) : (
-            <form action={archiveBrand}>
-              <input type="hidden" name="id" value={brand.id} />
-              <button type="submit" className="rounded-md px-2 py-1.5 text-[13px] text-muted hover:bg-paper hover:text-ink">
-                Archive
-              </button>
-            </form>
+            <>
+              <form action={duplicateBrand}>
+                <input type="hidden" name="id" value={brand.id} />
+                <PendingButton pendingLabel="Duplicating…" className="rounded-md px-2 py-1.5 text-[13px] text-muted hover:bg-paper hover:text-ink">
+                  Duplicate
+                </PendingButton>
+              </form>
+              <form action={archiveBrand}>
+                <input type="hidden" name="id" value={brand.id} />
+                <button type="submit" className="rounded-md px-2 py-1.5 text-[13px] text-muted hover:bg-paper hover:text-ink">
+                  Archive
+                </button>
+              </form>
+            </>
           )}
         </div>
       </div>
