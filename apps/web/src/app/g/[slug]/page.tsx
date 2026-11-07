@@ -51,6 +51,7 @@ export default async function PublishedGuidePage({ params }: Params) {
       urls={urls}
       downloadHref={(id) => (filesAvailable ? `/g/${slug}/download/${id}` : null)}
       downloadAllEndpoint={filesAvailable ? `/g/${slug}/downloads` : null}
+      agentBase={`/g/${slug}`}
     />
   );
 }

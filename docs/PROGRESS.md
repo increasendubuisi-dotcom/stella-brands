@@ -1,6 +1,5 @@
 # Progress
 
-
 > Stella continues the Stela Brands codebase (10 commits, built 7 Nov 2026). Rows 1–24 below describe what that code does. Deployment and Supabase notes refer to the old stela-brands project until Stella has its own.
 
 
@@ -26,6 +25,7 @@ Status key: Not started · In progress · Completed · Tested · Blocked
 | 14 | Publish, history, rollback, unpublish | Completed | Publish panel with notes, version history, restore, access settings; plan limit on live guides. |
 | 15 | Published guide, password | Completed | /g/<slug>, password unlock (httpOnly cookie, checked by the database each visit). Files need SUPABASE_SERVICE_ROLE_KEY in Vercel. |
 | 16 | Client downloads | Completed | Single files via short-lived signed links; Download all zips in the browser. Needs SUPABASE_SERVICE_ROLE_KEY. |
+| 16a | brand.md / brand.json for AI tools | Tested | Built from the live snapshot only, same access rules as the guide; only downloadable files are linked; storage paths never exposed; computed CMYK marked approximate. 13 unit tests. Linked from the guide footer. |
 | 17 | Entitlements | Tested | Plans in config with brief's NGN prices; limits and annual prices are proposals. |
 
 ## Phase 2 — AI brand strategy assistant

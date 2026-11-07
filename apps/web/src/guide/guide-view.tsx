@@ -19,6 +19,8 @@ type Props = {
   /** Endpoint returning download links for "Download all", or null. */
   downloadAllEndpoint: string | null;
   banner?: ReactNode;
+  /** Base path of the guide's AI-readable files (brand.md / brand.json); omitted in draft preview. */
+  agentBase?: string;
 };
 
 const STRATEGY_LABELS: Record<string, string> = {
@@ -42,7 +44,7 @@ function fontStack(f: { name: string; fallback: string } | undefined, generic: s
   return `"${cssFamilyName(f.name)}", ${f.fallback.replace(/[^\p{L}\p{N} ,_-]/gu, "") || generic}`;
 }
 
-export function GuideView({ snapshot, urls, downloadHref, downloadAllEndpoint, banner }: Props) {
+export function GuideView({ snapshot, urls, downloadHref, downloadAllEndpoint, banner, agentBase }: Props) {
   const families = snapshot.tokens.typeFamilies;
   const primary = families.find((f) => f.role === "primary") ?? families[0];
   const secondary = families.find((f) => f.role === "secondary") ?? primary;
@@ -143,7 +145,16 @@ export function GuideView({ snapshot, urls, downloadHref, downloadAllEndpoint, b
                 ) : null}
               </section>
             ) : null}
-            <footer className="border-t border-black/10 pt-6 text-xs text-black/40">Made with Stella</footer>
+            <footer className="flex flex-wrap justify-between gap-3 border-t border-black/10 pt-6 text-xs text-black/50">
+              <span>Made with Stella</span>
+              {agentBase ? (
+                <span className="flex gap-4">
+                  For AI tools:
+                  <a href={`${agentBase}/brand.md`} className="underline">brand.md</a>
+                  <a href={`${agentBase}/brand.json`} className="underline">brand.json</a>
+                </span>
+              ) : null}
+            </footer>
           </div>
         </main>
       </div>
